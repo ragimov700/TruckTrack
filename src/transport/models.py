@@ -1,8 +1,17 @@
-from django.core.validators import RegexValidator, MinValueValidator, \
-    MaxValueValidator
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+    RegexValidator,
+)
 from django.db import models
-from src.transport.constants import NUMBER_REGEX, MIN_CAPACITY, MAX_CAPACITY, \
-    MIN_CARGO_WEIGHT, MAX_CARGO_WEIGHT
+
+from src.transport.constants import (
+    MAX_CAPACITY,
+    MAX_CARGO_WEIGHT,
+    MIN_CAPACITY,
+    MIN_CARGO_WEIGHT,
+    NUMBER_REGEX,
+)
 
 
 class Location(models.Model):
@@ -105,4 +114,3 @@ class Truck(models.Model):
     class Meta:
         verbose_name = 'грузовик'
         verbose_name_plural = 'грузовики'
-

@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "4.2.11"
+flake8 = "^7.0.0"
+isort = "^5.13.2"
 
 
 [build-system]
