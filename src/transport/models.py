@@ -5,7 +5,7 @@ from django.core.validators import (
 )
 from django.db import models
 
-from src.transport.constants import (
+from transport.constants import (
     MAX_CAPACITY,
     MAX_CARGO_WEIGHT,
     MIN_CAPACITY,
@@ -23,12 +23,12 @@ class Location(models.Model):
     state = models.CharField(max_length=2, verbose_name='штат')
     zip_code = models.CharField(max_length=5, verbose_name='почтовый индекс')
     latitude = models.DecimalField(
-        max_length=8,
+        max_digits=8,
         decimal_places=5,
         verbose_name='широта'
     )
     longitude = models.DecimalField(
-        max_length=8,
+        max_digits=8,
         decimal_places=5,
         verbose_name='долгота'
     )
