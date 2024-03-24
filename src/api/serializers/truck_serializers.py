@@ -6,7 +6,7 @@ from rest_framework import serializers
 from transport.models import Truck, Location
 
 
-class TruckSerializer(serializers.ModelSerializer):
+class TruckReadSerializer(serializers.ModelSerializer):
     location_zip = serializers.CharField(source='location.zip_code',
                                          read_only=True)
 
@@ -15,11 +15,11 @@ class TruckSerializer(serializers.ModelSerializer):
         fields = ('id', 'plate_number', 'capacity', 'location_zip')
 
 
-class TruckDistanceSerializer(TruckSerializer):
+class TruckDistanceSerializer(TruckReadSerializer):
     distance_to_cargo = serializers.SerializerMethodField()
 
-    class Meta(TruckSerializer.Meta):
-        fields = TruckSerializer.Meta.fields + ('distance_to_cargo',)
+    class Meta(TruckReadSerializer.Meta):
+        fields = TruckReadSerializer.Meta.fields + ('distance_to_cargo',)
 
     def get_distance_to_cargo(self, obj):
         cargo = self.context.get('cargo')
@@ -32,7 +32,7 @@ class TruckDistanceSerializer(TruckSerializer):
         return None
 
 
-class TruckUpdateSerializer(serializers.ModelSerializer):
+class TruckSerializer(serializers.ModelSerializer):
     location_zip = serializers.CharField(max_length=5)
 
     def update(self, instance, validated_data):
@@ -46,8 +46,7 @@ class TruckUpdateSerializer(serializers.ModelSerializer):
                 'location_zip': 'Локация с таким ZIP-кодом не существует.'
             })
 
-        instance = super(TruckUpdateSerializer, self).update(instance,
-                                                             validated_data)
+        instance = super().update(instance, validated_data)
         instance.save()
         serializer = TruckSerializer(instance)
         return serializer.data

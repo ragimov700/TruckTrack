@@ -7,7 +7,7 @@ from api.utils import get_surrounding_square
 from transport.models import Cargo, Location, Truck
 
 
-class CargoCreateSerializer(serializers.ModelSerializer):
+class CargoSerializer(serializers.ModelSerializer):
     """
 
     """
@@ -15,12 +15,18 @@ class CargoCreateSerializer(serializers.ModelSerializer):
     delivery_location_zip = serializers.CharField(max_length=5)
 
     def validate(self, data):
-        pickup_location_zip = data.get('pickup_location_zip')
-        delivery_location_zip = data.get('delivery_location_zip')
+        pickup_location_zip = data.get(
+            'pickup_location_zip',
+            self.instance.pickup_location.zip_code if self.instance else None
+        )
+        delivery_location_zip = data.get(
+            'delivery_location_zip',
+            self.instance.delivery_location.zip_code if self.instance else None
+        )
 
         if pickup_location_zip == delivery_location_zip:
             raise ValidationError(
-                {'detail': 'Локации приема и доставки груза'
+                {'detail': 'Локации приема и доставки груза '
                            'не должны совпадать.'}
             )
         return data
@@ -53,6 +59,32 @@ class CargoCreateSerializer(serializers.ModelSerializer):
         )
         detail_serializer = CargoDetailSerializer(cargo)
         return detail_serializer.data
+
+    def update(self, instance, validated_data):
+        new_pickup_location_zip = validated_data.get('pickup_location_zip')
+        new_delivery_location_zip = validated_data.get('delivery_location_zip')
+        if new_pickup_location_zip is not None:
+            try:
+                instance.pickup_location = Location.objects.get(
+                    zip_code=new_pickup_location_zip
+                )
+            except Location.DoesNotExist:
+                raise serializers.ValidationError(
+                    {'pickup_location_zip': 'Локация с таким ZIP-кодом '
+                                            'для погрузки не существует.'})
+        if new_delivery_location_zip is not None:
+            try:
+                instance.delivery_location = Location.objects.get(
+                    zip_code=new_delivery_location_zip
+                )
+            except Location.DoesNotExist:
+                raise serializers.ValidationError(
+                    {'delivery_location_zip': 'Локация с таким ZIP-кодом '
+                                              'для доставки не существует.'})
+        instance = super().update(instance, validated_data)
+        instance.save()
+        serializer = CargoDetailSerializer(instance)
+        return serializer.data
 
     class Meta:
         model = Cargo
