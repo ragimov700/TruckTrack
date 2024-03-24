@@ -27,10 +27,11 @@ class Command(BaseCommand):
                 BATCH_SIZE = 1000
 
                 for row in reader:
+                    formatted_zip_code = '{:05}'.format(int(row['zip']))
                     location = Location(
                         city=row['city'],
                         state=row['state_id'],
-                        zip_code=row['zip'],
+                        zip_code=formatted_zip_code,
                         latitude=row['lat'],
                         longitude=row['lng']
                     )

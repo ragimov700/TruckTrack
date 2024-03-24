@@ -11,6 +11,7 @@ from transport.constants import (
     MIN_CAPACITY,
     MIN_CARGO_WEIGHT,
     NUMBER_REGEX,
+    ZIP_CODE_REGEX
 )
 
 
@@ -21,7 +22,15 @@ class Location(models.Model):
     """
     city = models.CharField(max_length=100, verbose_name='город')
     state = models.CharField(max_length=2, verbose_name='штат')
-    zip_code = models.CharField(max_length=5, verbose_name='почтовый индекс')
+    zip_code = models.CharField(
+        max_length=5,
+        validators=(
+            RegexValidator(
+                regex=ZIP_CODE_REGEX,
+                message='Индекс должен иметь формат: "12345"'
+            ),
+        ),
+        verbose_name='почтовый индекс')
     latitude = models.DecimalField(
         max_digits=8,
         decimal_places=5,
@@ -88,7 +97,7 @@ class Truck(models.Model):
     и текущем местоположении.
     """
     plate_number = models.CharField(
-        max_length=6,
+        max_length=5,
         verbose_name='номерной знак',
         unique=True,
         validators=(

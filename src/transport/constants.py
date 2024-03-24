@@ -1,5 +1,7 @@
 NUMBER_REGEX = r'^[1-9]\d{3}[A-Z]$'
 
+ZIP_CODE_REGEX = r'^\d{5}$'
+
 MIN_CAPACITY = 1
 MAX_CAPACITY = 1000
 
