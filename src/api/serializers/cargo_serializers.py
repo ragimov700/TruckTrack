@@ -8,6 +8,9 @@ from transport.models import Cargo, Location, Truck
 
 
 class CargoCreateSerializer(serializers.ModelSerializer):
+    """
+
+    """
     pickup_location_zip = serializers.CharField(max_length=5)
     delivery_location_zip = serializers.CharField(max_length=5)
 

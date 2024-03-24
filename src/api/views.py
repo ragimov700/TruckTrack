@@ -6,7 +6,8 @@ from api.serializers.cargo_serializers import (
     CargoListSerializer,
 )
 from api.serializers.location_serializers import LocationSerializer
-from api.serializers.truck_serializers import TruckSerializer
+from api.serializers.truck_serializers import TruckSerializer, \
+    TruckUpdateSerializer
 from transport.models import Cargo, Location, Truck
 
 
@@ -30,4 +31,8 @@ class LocationViewSet(viewsets.ModelViewSet):
 
 class TruckViewSet(viewsets.ModelViewSet):
     queryset = Truck.objects.all()
-    serializer_class = TruckSerializer
+
+    def get_serializer_class(self):
+        match self.action:
+            case 'partial_update' | 'update':
+                return TruckUpdateSerializer
