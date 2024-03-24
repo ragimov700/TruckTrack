@@ -32,11 +32,11 @@ class LocationViewSet(viewsets.ModelViewSet):
 
 
 class TruckViewSet(viewsets.ModelViewSet):
-    queryset = Truck.objects.all()
+    queryset = Truck.objects.all().order_by('id')
 
     def get_serializer_class(self):
         match self.action:
-            case 'partial_update' | 'update' | 'create':
-                return TruckSerializer
-            case _:
+            case 'list' | 'retrieve':
                 return TruckReadSerializer
+            case _:
+                return TruckSerializer
