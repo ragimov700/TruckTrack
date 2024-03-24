@@ -1,9 +1,7 @@
-from decimal import Decimal
-
 from geopy.distance import geodesic
 from rest_framework import serializers
 
-from transport.models import Truck, Location
+from transport.models import Location, Truck
 
 
 class TruckReadSerializer(serializers.ModelSerializer):
@@ -33,7 +31,22 @@ class TruckDistanceSerializer(TruckReadSerializer):
 
 
 class TruckSerializer(serializers.ModelSerializer):
-    location_zip = serializers.CharField(max_length=5)
+    location_zip = serializers.CharField(max_length=5, required=False)
+
+    def create(self, validated_data):
+        location_zip = validated_data.pop('location_zip', None)
+        location = None
+        if location_zip is not None:
+            try:
+                location = Location.objects.get(zip_code=location_zip)
+            except Location.DoesNotExist:
+                raise serializers.ValidationError(
+                    {'location_zip': 'Локация с таким ZIP-кодом '
+                                     'для погрузки не существует.'}
+                )
+        truck = Truck.objects.create(location=location, **validated_data)
+        serializer = TruckReadSerializer(truck)
+        return serializer.data
 
     def update(self, instance, validated_data):
         new_location_zip = validated_data.get('location_zip')
@@ -48,7 +61,7 @@ class TruckSerializer(serializers.ModelSerializer):
 
         instance = super().update(instance, validated_data)
         instance.save()
-        serializer = TruckSerializer(instance)
+        serializer = TruckReadSerializer(instance)
         return serializer.data
 
     class Meta:

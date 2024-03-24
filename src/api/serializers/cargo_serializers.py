@@ -40,7 +40,8 @@ class CargoSerializer(serializers.ModelSerializer):
         except Location.DoesNotExist:
             raise serializers.ValidationError(
                 {'pickup_location_zip': 'Локация с таким ZIP-кодом '
-                                        'для погрузки не существует.'})
+                                        'для погрузки не существует.'}
+            )
 
         try:
             delivery_location_zip = validated_data.pop('delivery_location_zip')

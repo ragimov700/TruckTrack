@@ -1,13 +1,15 @@
 from rest_framework import viewsets
 
 from api.serializers.cargo_serializers import (
-    CargoSerializer,
     CargoDetailSerializer,
     CargoListSerializer,
+    CargoSerializer,
 )
 from api.serializers.location_serializers import LocationSerializer
-from api.serializers.truck_serializers import TruckReadSerializer, \
-    TruckSerializer
+from api.serializers.truck_serializers import (
+    TruckReadSerializer,
+    TruckSerializer,
+)
 from transport.models import Cargo, Location, Truck
 
 
@@ -34,7 +36,7 @@ class TruckViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         match self.action:
-            case 'partial_update' | 'update':
+            case 'partial_update' | 'update' | 'create':
                 return TruckSerializer
             case _:
                 return TruckReadSerializer

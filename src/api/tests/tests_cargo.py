@@ -1,12 +1,14 @@
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.urls import reverse
-from .factories import LocationFactory, CargoFactory
-from transport.models import Cargo
+
+from api.tests.factories import CargoFactory, LocationFactory
 
 
 class CargoAPITestCase(APITestCase):
-
+    """
+    Тест-кейс для эндпоинтов грузов.
+    """
     def setUp(self):
         self.pickup_location = LocationFactory()
         self.delivery_location = LocationFactory()
