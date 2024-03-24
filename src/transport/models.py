@@ -39,6 +39,10 @@ class Location(models.Model):
     class Meta:
         verbose_name = 'локация'
         verbose_name_plural = 'локации'
+        constraints = [
+            models.UniqueConstraint(fields=('latitude', 'longitude'),
+                                    name='unique_location')
+        ]
 
 
 class Cargo(models.Model):
