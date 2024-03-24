@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from transport.models import Truck, Location, Cargo
+from transport.models import Cargo, Location, Truck
 
 
 @admin.register(Truck)
