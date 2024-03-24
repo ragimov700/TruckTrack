@@ -1,16 +1,26 @@
 from rest_framework import viewsets
 
-from api.serializers import (
-    CargoSerializer,
-    LocationSerializer,
-    TruckSerializer,
+from api.serializers.cargo_serializers import (
+    CargoCreateSerializer,
+    CargoDetailSerializer,
+    CargoListSerializer,
 )
+from api.serializers.location_serializers import LocationSerializer
+from api.serializers.truck_serializers import TruckSerializer
 from transport.models import Cargo, Location, Truck
 
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
-    serializer_class = CargoSerializer
+
+    def get_serializer_class(self):
+        match self.action:
+            case 'list':
+                return CargoListSerializer
+            case 'retrieve':
+                return CargoDetailSerializer
+            case _:
+                return CargoCreateSerializer
 
 
 class LocationViewSet(viewsets.ModelViewSet):

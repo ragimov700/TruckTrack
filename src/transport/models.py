@@ -11,7 +11,7 @@ from transport.constants import (
     MIN_CAPACITY,
     MIN_CARGO_WEIGHT,
     NUMBER_REGEX,
-    ZIP_CODE_REGEX
+    ZIP_CODE_REGEX,
 )
 
 
