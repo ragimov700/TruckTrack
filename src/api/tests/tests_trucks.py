@@ -2,12 +2,12 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from api.tests.factories import CargoFactory, LocationFactory, TruckFactory
+from api.tests.factories import LocationFactory, TruckFactory
 
 
-class CargoAPITestCase(APITestCase):
+class TruckAPITestCase(APITestCase):
     """
-    Тест-кейс для эндпоинтов грузов.
+    Тест-кейс для эндпоинтов грузовиков.
     """
     def setUp(self):
         self.truck = TruckFactory()

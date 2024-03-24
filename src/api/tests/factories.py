@@ -41,7 +41,6 @@ class TruckFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Truck
 
-    # Генерация случайного номерного знака
     plate_number = factory.LazyAttribute(
         lambda x: f"{random.randint(1000, 9999)}"
                   f"{random.choice(string.ascii_uppercase)}"

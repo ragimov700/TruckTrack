@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - trucktrack_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env.example
+    restart: always
+
+  backend:
+    build: ../src
+    restart: always
+    volumes:
+      - ../src:/app/
+    env_file:
+      - .env.example
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "sleep 3 && 
+             python manage.py migrate && 
+             python manage.py load_data &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+        - db
+
+volumes:
+  trucktrack_postgres_data:
