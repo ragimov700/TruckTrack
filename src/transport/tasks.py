@@ -11,5 +11,6 @@ def update_truck_locations():
     """
     for truck in Truck.objects.all():
         new_location = Location.objects.order_by('?').first()
-        truck.location = new_location
-        truck.save()
+        if new_location:
+            truck.location = new_location
+            truck.save()
