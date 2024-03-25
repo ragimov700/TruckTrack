@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework',
     'drf_spectacular',
+    'django_filters',
 
     'transport.apps.TransportConfig',
     'api.apps.ApiConfig',

@@ -1,6 +1,8 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
 
+from api.filters import CargoFilter
 from api.schemas import cargo_schema, locations_schema, trucks_schema
 from api.serializers.cargo_serializers import (
     CargoDetailSerializer,
@@ -25,6 +27,8 @@ class CargoViewSet(viewsets.ModelViewSet):
         'pickup_location',
         'delivery_location'
     ).order_by('id')
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CargoFilter
 
     def get_serializer_class(self):
         match self.action:

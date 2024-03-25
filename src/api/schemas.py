@@ -1,4 +1,8 @@
-from drf_spectacular.utils import OpenApiExample, extend_schema
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    extend_schema,
+)
 
 from api.constants import CARGO_RETRIEVE_EXAMPLE
 
@@ -7,6 +11,28 @@ cargo_schema = {
         summary='Получение списка грузов',
         description='Возвращает список всех грузов, с количеством '
                     'грузовиков находящихся в радиусе 450 миль.',
+        parameters=[
+            OpenApiParameter(
+                name='max_weight',
+                description='Максимальный вес',
+                type=int,
+            ),
+            OpenApiParameter(
+                name='min_weight',
+                description='Минимальный вес',
+                type=int,
+            ),
+            OpenApiParameter(
+                name='page',
+                description='Страница',
+                type=int,
+            ),
+            OpenApiParameter(
+                name='distance',
+                description='Дистанция грузовика до груза',
+                type=int,
+            ),
+        ]
     ),
     'retrieve': extend_schema(
         summary='Получение груза по ID',
