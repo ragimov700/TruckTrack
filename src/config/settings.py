@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_beat',
     'rest_framework',
 
     'transport.apps.TransportConfig',
@@ -127,3 +131,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50,
 }
+
+CELERY_BEAT_SCHEDULE = {
+    'update_truck_locations': {
+        'task': 'transport.tasks.update_truck_locations',
+        'schedule': crontab(minute='*/1'),
+    },
+}
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':6379/0'
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':6379/0'
