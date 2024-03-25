@@ -36,6 +36,13 @@ class CargoAPITestCase(APITestCase):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_get_detail_cargo(self):
+        """
+        Тест возможности получения конкретного груза.
+        """
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_update_cargo(self):
         """
         Тест возможности изменения груза.

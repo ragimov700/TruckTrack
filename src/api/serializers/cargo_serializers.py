@@ -3,8 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from api.serializers.truck_serializers import TruckDistanceSerializer
-from api.utils import get_surrounding_square
-from transport.models import Cargo, Location, Truck
+from transport.models import Cargo, Location
 
 
 class CargoSerializer(serializers.ModelSerializer):
@@ -15,8 +14,10 @@ class CargoSerializer(serializers.ModelSerializer):
     При создании или обновлении груза, использует почтовый индекс для
     нахождения соответствующих локаций погрузки и разгрузки.
     """
-    pickup_location_zip = serializers.CharField(max_length=5)
-    delivery_location_zip = serializers.CharField(max_length=5)
+    pickup_location_zip = serializers.CharField(max_length=5,
+                                                write_only=True)
+    delivery_location_zip = serializers.CharField(max_length=5,
+                                                  write_only=True)
 
     def validate(self, data):
         pickup_location_zip = data.get(
@@ -115,25 +116,17 @@ class CargoListSerializer(serializers.ModelSerializer):
     nearby_trucks_count = serializers.SerializerMethodField()
 
     def get_nearby_trucks_count(self, obj):
-        square_coords = get_surrounding_square(
-            obj.pickup_location.latitude,
-            obj.pickup_location.longitude,
-            450
-        )
-        trucks = Truck.objects.filter(
-            location__latitude__gte=square_coords['min_lat'],
-            location__latitude__lte=square_coords['max_lat'],
-            location__longitude__gte=square_coords['min_lng'],
-            location__longitude__lte=square_coords['max_lng'],
-        )
-        count = 0
+        trucks = self.context.get('trucks', [])
         pickup_coords = (obj.pickup_location.latitude,
                          obj.pickup_location.longitude)
+
+        count = 0
         for truck in trucks:
             truck_coords = (truck.location.latitude, truck.location.longitude)
-            distance = geodesic(pickup_coords, truck_coords).miles
+            distance = geodesic(truck_coords, pickup_coords).miles
             if distance <= 450:
                 count += 1
+
         return count
 
     class Meta:
@@ -166,6 +159,6 @@ class CargoDetailSerializer(serializers.ModelSerializer):
                   'delivery_location_zip', 'trucks')
 
     def get_trucks(self, obj):
-        trucks = Truck.objects.all()
+        trucks = self.context.get('trucks', [])
         return TruckDistanceSerializer(trucks, many=True,
                                        context={'cargo': obj}).data
