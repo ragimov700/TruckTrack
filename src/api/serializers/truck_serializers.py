@@ -5,6 +5,9 @@ from transport.models import Location, Truck
 
 
 class TruckReadSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для чтения данных грузовика.
+    """
     location_zip = serializers.CharField(source='location.zip_code',
                                          read_only=True)
 
@@ -14,6 +17,12 @@ class TruckReadSerializer(serializers.ModelSerializer):
 
 
 class TruckDistanceSerializer(TruckReadSerializer):
+    """
+    Сериализатор для расчета и отображения расстояния от грузовика до груза.
+
+    Расширяет TruckReadSerializer, добавляя поле distance_to_cargo,
+    которое показывает расстояние от грузовика до указанного в контексте груза.
+    """
     distance_to_cargo = serializers.SerializerMethodField()
 
     class Meta(TruckReadSerializer.Meta):
@@ -31,6 +40,12 @@ class TruckDistanceSerializer(TruckReadSerializer):
 
 
 class TruckSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для создания и обновления данных грузовиков.
+
+    Обрабатывает создание и обновление грузовиков, включая управление
+    связанным местоположением через почтовый индекс.
+    """
     location_zip = serializers.CharField(max_length=5, required=False)
 
     def create(self, validated_data):

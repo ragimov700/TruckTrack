@@ -9,7 +9,11 @@ from transport.models import Cargo, Location, Truck
 
 class CargoSerializer(serializers.ModelSerializer):
     """
+    Сериализатор для создания, обновления и валидации грузов.
 
+    Валидирует, что локации погрузки и разгрузки груза не совпадают.
+    При создании или обновлении груза, использует почтовый индекс для
+    нахождения соответствующих локаций погрузки и разгрузки.
     """
     pickup_location_zip = serializers.CharField(max_length=5)
     delivery_location_zip = serializers.CharField(max_length=5)
@@ -94,6 +98,12 @@ class CargoSerializer(serializers.ModelSerializer):
 
 
 class CargoListSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для представления списка грузов.
+
+    Включает в себя количество ближайших грузовиков в пределах 450 миль от
+    места погрузки каждого груза.
+    """
     pickup_location_zip = serializers.CharField(
         source='pickup_location.zip_code',
         read_only=True
@@ -134,6 +144,12 @@ class CargoListSerializer(serializers.ModelSerializer):
 
 
 class CargoDetailSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для представления детальной информации о грузе.
+
+    Помимо основной информации о грузе, включает в себя список всех грузовиков
+    с расстоянием до груза.
+    """
     pickup_location_zip = serializers.CharField(
         source='pickup_location.zip_code',
         read_only=True
