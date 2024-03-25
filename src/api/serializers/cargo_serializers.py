@@ -63,8 +63,7 @@ class CargoSerializer(serializers.ModelSerializer):
             delivery_location=delivery_location,
             **validated_data
         )
-        detail_serializer = CargoDetailSerializer(cargo)
-        return detail_serializer.data
+        return cargo
 
     def update(self, instance, validated_data):
         new_pickup_location_zip = validated_data.get('pickup_location_zip')

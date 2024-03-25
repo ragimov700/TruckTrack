@@ -1,5 +1,7 @@
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
 
+from api.schemas import cargo_schema, locations_schema, trucks_schema
 from api.serializers.cargo_serializers import (
     CargoDetailSerializer,
     CargoListSerializer,
@@ -13,6 +15,8 @@ from api.serializers.truck_serializers import (
 from transport.models import Cargo, Location, Truck
 
 
+@extend_schema(tags=['Грузы'])
+@extend_schema_view(**cargo_schema)
 class CargoViewSet(viewsets.ModelViewSet):
     """
     ViewSet для обработки запросов к грузам.
@@ -41,6 +45,8 @@ class CargoViewSet(viewsets.ModelViewSet):
                 return context
 
 
+@extend_schema(tags=['Локации'])
+@extend_schema_view(**locations_schema)
 class LocationViewSet(viewsets.ModelViewSet):
     """
     ViewSet для обработки запросов к локациям.
@@ -49,6 +55,8 @@ class LocationViewSet(viewsets.ModelViewSet):
     serializer_class = LocationSerializer
 
 
+@extend_schema(tags=['Грузовики'])
+@extend_schema_view(**trucks_schema)
 class TruckViewSet(viewsets.ModelViewSet):
     """
     ViewSet для обработки запросов к грузовикам.

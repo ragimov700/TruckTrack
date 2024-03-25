@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     'django_celery_beat',
     'rest_framework',
+    'drf_spectacular',
 
     'transport.apps.TransportConfig',
     'api.apps.ApiConfig',
@@ -136,6 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 CELERY_BEAT_SCHEDULE = {
@@ -147,3 +149,14 @@ CELERY_BEAT_SCHEDULE = {
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':6379/0'
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':6379/0'
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": 'TruckTrack API',
+    'DESCRIPTION': 'Сервис поиска ближайших машин для перевозки грузов.',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        "filter": True,
+    },
+    'COMPONENT_SPLIT_REQUEST': True
+}
